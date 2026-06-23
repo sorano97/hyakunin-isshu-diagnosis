@@ -2,6 +2,8 @@
 
 10の質問から、今のユーザーに合う百人一首を30首の中から選ぶスマホ優先のWebアプリです。
 
+公開版: https://sorano97.github.io/hyakunin-isshu-diagnosis/
+
 ## 開発
 
 ```bash

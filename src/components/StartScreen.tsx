@@ -34,7 +34,7 @@ export function StartScreen({ onStart, error }: StartScreenProps) {
             あなたを百人一首に<br />たとえるなら？
           </h1>
           <p className="mx-auto mt-6 max-w-md text-sm leading-8 text-sumi/65 sm:text-base">
-            10の問いから、今のあなたの心に寄り添う一首を見つけます。古典を知らなくても、気軽にお楽しみください。
+            10の問いから、小倉百人一首の全100首の中で今のあなたに寄り添う一首を見つけます。古典を知らなくても、気軽にお楽しみください。
           </p>
         </div>
 

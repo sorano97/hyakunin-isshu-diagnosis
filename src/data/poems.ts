@@ -1,6 +1,6 @@
-import type { Poem } from "@/types/diagnosis";
+import type { DiagnosisTag, Poem } from "@/types/diagnosis";
 
-export const poems: Poem[] = [
+const featuredPoems: Poem[] = [
   {
     id: "001", kamiNoKu: "秋の田の かりほの庵の 苫をあらみ", shimoNoKu: "わが衣手は 露にぬれつつ", poet: "天智天皇",
     translation: "秋の田のそばの仮小屋で、屋根の編み目が粗いため、私の袖は露にぬれ続けている。",
@@ -212,5 +212,108 @@ export const poems: Poem[] = [
     message: "強い思いを抱えたときほど、自分をいたわる余白も必要です。", action: "心を許せる人やノートに、気持ちを少し預けてみましょう。",
   },
 ];
+
+const guidance: Record<DiagnosisTag, Pick<Poem, "message" | "action">> = {
+  love: { message: "大切に思う気持ちは、あなたの毎日をあたためる力です。", action: "思い浮かんだ人へ、短い言葉を届けてみましょう。" },
+  loneliness: { message: "一人でいる時間も、心を深く育てる静かな季節です。", action: "安心できる人や場所と、少しだけつながってみましょう。" },
+  passion: { message: "強く心が動くことは、次の一歩を照らす合図です。", action: "今いちばん気になることに、十分だけ取り組んでみましょう。" },
+  calm: { message: "急がず整える時間が、あなたらしい答えを連れてきます。", action: "深呼吸して、今日やることを一つに絞ってみましょう。" },
+  effort: { message: "積み重ねた時間は、見えないところでも力になっています。", action: "今日続けられたことを一つ記録してみましょう。" },
+  nostalgia: { message: "懐かしさは、今の自分を支える大切な根っこです。", action: "心に残る思い出を一つ、言葉にしてみましょう。" },
+  change: { message: "変わり目にいる今だからこそ、新しい景色に出会えます。", action: "いつもと違う小さな選択を一つしてみましょう。" },
+  confidence: { message: "あなたが選んだ一歩は、未来へ向かう確かな始まりです。", action: "できそうだと思うことから、迷わず始めてみましょう。" },
+  sensitivity: { message: "心が動いた瞬間には、あなたらしさが映っています。", action: "今日きれいだと感じたものを一つ残してみましょう。" },
+  confusion: { message: "すぐに答えが出なくても、迷う時間には意味があります。", action: "気がかりを紙に書き、今できることだけに印をつけましょう。" },
+};
+
+type NewPoem = Omit<Poem, "comment" | "message" | "action"> & {
+  insight: string;
+  tone: DiagnosisTag;
+};
+
+function createPoem({ insight, tone, ...poem }: NewPoem): Poem {
+  return {
+    ...poem,
+    comment: `あなたは${insight}人です。この歌の心が、今のあなたの感覚にそっと重なっています。`,
+    ...guidance[tone],
+  };
+}
+
+const additionalPoems: Poem[] = [
+  createPoem({ id: "003", kamiNoKu: "あしびきの 山鳥の尾の しだり尾の", shimoNoKu: "ながながし夜を ひとりかも寝む", poet: "柿本人麻呂", translation: "山鳥の長く垂れた尾のように、長い長い夜を私は一人で眠るのだろうか。", tags: { loneliness: 2, love: 1, sensitivity: 1 }, insight: "会えない時間の長さを、深い思いへと変えられる", tone: "loneliness" }),
+  createPoem({ id: "005", kamiNoKu: "奥山に 紅葉踏みわけ 鳴く鹿の", shimoNoKu: "声きく時ぞ 秋は悲しき", poet: "猿丸大夫", translation: "奥山で紅葉を踏み分けながら鳴く鹿の声を聞くとき、秋の悲しさがひときわ身にしみる。", tags: { sensitivity: 2, loneliness: 1, nostalgia: 1 }, insight: "音や景色の奥にある気持ちまで受け取れる", tone: "sensitivity" }),
+  createPoem({ id: "008", kamiNoKu: "わが庵は 都のたつみ しかぞ住む", shimoNoKu: "世をうぢ山と 人はいふなり", poet: "喜撰法師", translation: "私の庵は都の東南にあり、こうして静かに暮らしている。それなのに世をつらいと思って宇治山へ逃れたと人は言うようだ。", tags: { calm: 2, loneliness: 1, confidence: 1 }, insight: "周りの評判より、自分に合う静かな暮らしを選べる", tone: "calm" }),
+  createPoem({ id: "010", kamiNoKu: "これやこの 行くも帰るも 別れては", shimoNoKu: "知るも知らぬも 逢坂の関", poet: "蝉丸", translation: "これが、旅立つ人も帰る人も、知る人も知らない人も、別れてはまた出会うという逢坂の関なのだ。", tags: { change: 2, nostalgia: 1, confidence: 1 }, insight: "出会いと別れを人生の自然な流れとして受け止められる", tone: "change" }),
+  createPoem({ id: "011", kamiNoKu: "わたの原 八十島かけて 漕ぎ出でぬと", shimoNoKu: "人には告げよ あまの釣舟", poet: "参議篁", translation: "広い海へ、多くの島々を目指して船出したと、都の人に伝えておくれ、漁師の釣り舟よ。", tags: { confidence: 2, change: 1, loneliness: 1 }, insight: "未知の場所へ向かうときも、覚悟を持って進める", tone: "confidence" }),
+  createPoem({ id: "012", kamiNoKu: "天つ風 雲の通ひ路 吹きとぢよ", shimoNoKu: "をとめの姿 しばしとどめむ", poet: "僧正遍昭", translation: "空を吹く風よ、雲の中の帰り道を閉ざしておくれ。天女のような舞姫たちの姿を、もう少しここにとどめておきたい。", tags: { sensitivity: 2, passion: 1, love: 1 }, insight: "美しい一瞬を心から惜しみ、大切に味わえる", tone: "sensitivity" }),
+  createPoem({ id: "014", kamiNoKu: "陸奥の しのぶもぢずり 誰ゆゑに", shimoNoKu: "乱れそめにし われならなくに", poet: "河原左大臣", translation: "陸奥の乱れ模様のように、私の心は誰のせいで乱れ始めたのだろう。ほかでもない、あなたのためなのに。", tags: { love: 2, confusion: 2 }, insight: "誰かを思うことで生まれる心の揺れに正直な", tone: "confusion" }),
+  createPoem({ id: "016", kamiNoKu: "立ち別れ いなばの山の 峰に生ふる", shimoNoKu: "まつとし聞かば 今帰り来む", poet: "中納言行平", translation: "別れて因幡へ行くけれど、稲葉山の松のように、あなたが待っていると聞いたならすぐ帰ってこよう。", tags: { love: 2, nostalgia: 1, confidence: 1 }, insight: "離れていても、待つ人との約束を忘れない", tone: "love" }),
+  createPoem({ id: "020", kamiNoKu: "わびぬれば 今はた同じ 難波なる", shimoNoKu: "みをつくしても 逢はむとぞ思ふ", poet: "元良親王", translation: "これほど思い悩んだ今となっては、どうなっても同じこと。難波の澪標のように身を尽くしてでも、あなたに会いたい。", tags: { passion: 2, love: 2, confidence: 1 }, insight: "覚悟を決めたとき、思いのままに動ける", tone: "passion" }),
+  createPoem({ id: "021", kamiNoKu: "今来むと いひしばかりに 長月の", shimoNoKu: "有明の月を 待ち出でつるかな", poet: "素性法師", translation: "すぐ行くと言ったあなたの言葉を信じ、秋の長い夜を待ち続け、とうとう明け方の月まで見てしまった。", tags: { love: 1, effort: 1, loneliness: 1, confusion: 1 }, insight: "約束を信じて、辛抱強く待つことのできる", tone: "effort" }),
+  createPoem({ id: "022", kamiNoKu: "吹くからに 秋の草木の しをるれば", shimoNoKu: "むべ山風を 嵐といふらむ", poet: "文屋康秀", translation: "吹いたとたんに秋の草木がしおれる。なるほど、山から吹く風を「嵐」と呼ぶわけだ。", tags: { change: 2, sensitivity: 1, confidence: 1 }, insight: "目の前の変化から、本質を鮮やかに見抜ける", tone: "change" }),
+  createPoem({ id: "025", kamiNoKu: "名にし負はば 逢坂山の さねかづら", shimoNoKu: "人に知られで くるよしもがな", poet: "三条右大臣", translation: "「逢う」という名を持つ逢坂山のさねかずらよ、そのつるをたぐるように、人に知られずあなたのもとへ行く方法があればいいのに。", tags: { love: 2, effort: 1, confusion: 1 }, insight: "大切な思いを守りながら、届ける方法を探せる", tone: "love" }),
+  createPoem({ id: "029", kamiNoKu: "心あてに 折らばや折らむ 初霜の", shimoNoKu: "置きまどはせる 白菊の花", poet: "凡河内躬恒", translation: "当てずっぽうに折るなら折ってみようか。初霜が一面に降り、どれが白菊の花なのか見分けられないのだから。", tags: { sensitivity: 2, confusion: 1, calm: 1 }, insight: "似たものの中から、繊細な違いを見つけようとする", tone: "sensitivity" }),
+  createPoem({ id: "030", kamiNoKu: "有明の つれなく見えし 別れより", shimoNoKu: "暁ばかり 憂きものはなし", poet: "壬生忠岑", translation: "明け方の月が冷たく見えたあの別れ以来、夜明けほどつらいものはない。", tags: { love: 1, loneliness: 2, nostalgia: 1 }, insight: "別れの記憶を、景色とともに深く心へ刻む", tone: "loneliness" }),
+  createPoem({ id: "031", kamiNoKu: "朝ぼらけ 有明の月と 見るまでに", shimoNoKu: "吉野の里に 降れる白雪", poet: "坂上是則", translation: "夜明けの吉野に、有明の月の光かと見間違えるほど真っ白な雪が降り積もっている。", tags: { sensitivity: 2, calm: 2 }, insight: "静かな朝の光景から、澄んだ美しさを受け取れる", tone: "calm" }),
+  createPoem({ id: "032", kamiNoKu: "山川に 風のかけたる しがらみは", shimoNoKu: "流れもあへぬ 紅葉なりけり", poet: "春道列樹", translation: "山の川に風が架けた柵とは、流れきれずに水面へ集まった紅葉だったのだ。", tags: { sensitivity: 2, change: 1, calm: 1 }, insight: "偶然がつくる景色に、豊かな物語を見つけられる", tone: "sensitivity" }),
+  createPoem({ id: "034", kamiNoKu: "誰をかも 知る人にせむ 高砂の", shimoNoKu: "松も昔の 友ならなくに", poet: "藤原興風", translation: "いったい誰を親しい友とすればよいのだろう。長寿の高砂の松でさえ、昔からの友ではないのだから。", tags: { loneliness: 2, nostalgia: 2 }, insight: "時の流れとともに変わる人間関係を、静かに見つめる", tone: "nostalgia" }),
+  createPoem({ id: "036", kamiNoKu: "夏の夜は まだ宵ながら 明けぬるを", shimoNoKu: "雲のいづこに 月宿るらむ", poet: "清原深養父", translation: "夏の夜はまだ宵だと思ううちに明けてしまった。月はいったい雲のどこに宿を取っているのだろう。", tags: { sensitivity: 2, confusion: 1, change: 1 }, insight: "短く過ぎる時間に、想像を広げて楽しめる", tone: "sensitivity" }),
+  createPoem({ id: "037", kamiNoKu: "白露に 風の吹きしく 秋の野は", shimoNoKu: "つらぬきとめぬ 玉ぞ散りける", poet: "文屋朝康", translation: "白露に風がしきりに吹く秋の野では、糸に通していない真珠が散るように露がこぼれている。", tags: { sensitivity: 2, change: 1, calm: 1 }, insight: "はかない動きの中にも、きらめきを見いだせる", tone: "sensitivity" }),
+  createPoem({ id: "038", kamiNoKu: "忘らるる 身をば思はず 誓ひてし", shimoNoKu: "人の命の 惜しくもあるかな", poet: "右近", translation: "忘れられた自分のことはかまわない。ただ、永遠の愛を神に誓ったあなたに罰が下るのではと、命が惜しまれる。", tags: { love: 2, calm: 1, loneliness: 1 }, insight: "傷ついたときにも、相手を思いやるやさしさを失わない", tone: "love" }),
+  createPoem({ id: "039", kamiNoKu: "浅茅生の 小野の篠原 しのぶれど", shimoNoKu: "あまりてなどか 人の恋しき", poet: "参議等", translation: "浅い茅が生える野の篠原、その「しの」のように忍んでいるのに、どうして抑えきれないほどあの人が恋しいのだろう。", tags: { love: 2, passion: 1, confusion: 1 }, insight: "抑えようとするほど深まる気持ちに、誠実でいられる", tone: "love" }),
+  createPoem({ id: "042", kamiNoKu: "契りきな かたみに袖を しぼりつつ", shimoNoKu: "末の松山 波越さじとは", poet: "清原元輔", translation: "涙でぬれた互いの袖を絞りながら約束したはずだ。末の松山を波が越さないように、心変わりはしないと。", tags: { love: 2, effort: 1, nostalgia: 1 }, insight: "交わした約束を重く受け止め、長く大切にできる", tone: "effort" }),
+  createPoem({ id: "044", kamiNoKu: "逢ふことの 絶えてしなくは なかなかに", shimoNoKu: "人をも身をも 恨みざらまし", poet: "中納言朝忠", translation: "もし出会うことがまったくなかったなら、かえってあの人も自分も恨まずにすんだだろうに。", tags: { love: 1, confusion: 2, loneliness: 1 }, insight: "出会えた喜びと苦しさの両方を、深く感じる", tone: "confusion" }),
+  createPoem({ id: "045", kamiNoKu: "あはれとも いふべき人は 思ほえで", shimoNoKu: "身のいたづらに なりぬべきかな", poet: "謙徳公", translation: "かわいそうだと言ってくれそうな人も思い浮かばず、私はこのままむなしく命を終えてしまいそうだ。", tags: { loneliness: 2, love: 1, confusion: 1 }, insight: "わかってほしいという心の声を、静かに抱えている", tone: "loneliness" }),
+  createPoem({ id: "047", kamiNoKu: "八重むぐら しげれる宿の さびしきに", shimoNoKu: "人こそ見えね 秋は来にけり", poet: "恵慶法師", translation: "つる草が幾重にも茂る寂しい家に、訪れる人は見えないが、秋だけはやって来たのだ。", tags: { loneliness: 2, calm: 1, change: 1 }, insight: "静かな場所で、確かに訪れる変化へ気づける", tone: "calm" }),
+  createPoem({ id: "048", kamiNoKu: "風をいたみ 岩うつ波の おのれのみ", shimoNoKu: "くだけてものを 思ふころかな", poet: "源重之", translation: "風が激しく、岩に打ちつける波が自分だけ砕けるように、私だけが心を砕いて思い悩んでいる。", tags: { passion: 2, confusion: 1, loneliness: 1 }, insight: "激しく揺れる感情から目をそらさず、向き合える", tone: "passion" }),
+  createPoem({ id: "049", kamiNoKu: "御垣守 衛士のたく火の 夜は燃え", shimoNoKu: "昼は消えつつ ものをこそ思へ", poet: "大中臣能宣朝臣", translation: "宮中の門を守る衛士の火が夜は燃え、昼は消えるように、夜は思いが燃え、昼は心に隠して恋い慕っている。", tags: { love: 1, passion: 2, calm: 1 }, insight: "表には出さなくても、内側に強い情熱を灯せる", tone: "passion" }),
+  createPoem({ id: "050", kamiNoKu: "君がため 惜しからざりし 命さへ", shimoNoKu: "長くもがなと 思ひけるかな", poet: "藤原義孝", translation: "あなたに会うためなら惜しくないと思っていた命さえ、会えた今では長くありたいと思うようになった。", tags: { love: 2, change: 1, confidence: 1 }, insight: "大切な出会いを、生きる力へ変えられる", tone: "love" }),
+  createPoem({ id: "051", kamiNoKu: "かくとだに えやはいぶきの さしも草", shimoNoKu: "さしも知らじな 燃ゆる思ひを", poet: "藤原実方朝臣", translation: "これほど好きだとさえ言えない。伊吹山のさしも草のように燃える私の思いを、あなたは知らないだろう。", tags: { passion: 2, love: 1, confusion: 1 }, insight: "言葉にできないほどの熱い思いを、胸に育てている", tone: "passion" }),
+  createPoem({ id: "052", kamiNoKu: "明けぬれば 暮るるものとは 知りながら", shimoNoKu: "なほ恨めしき 朝ぼらけかな", poet: "藤原道信朝臣", translation: "夜が明けてもまた日が暮れるとわかっているのに、あなたと別れなければならない夜明けがやはり恨めしい。", tags: { love: 2, loneliness: 1, nostalgia: 1 }, insight: "一緒にいられる時間を、何より大切に感じる", tone: "love" }),
+  createPoem({ id: "053", kamiNoKu: "嘆きつつ ひとり寝る夜の 明くる間は", shimoNoKu: "いかに久しき ものとかは知る", poet: "右大将道綱母", translation: "嘆きながら一人で眠る夜が明けるまで、どれほど長く感じられるか、あなたは知っているだろうか。", tags: { loneliness: 2, love: 1, confusion: 1 }, insight: "満たされない時間の痛みを、ありのまま感じ取れる", tone: "loneliness" }),
+  createPoem({ id: "054", kamiNoKu: "忘れじの 行末までは かたければ", shimoNoKu: "今日を限りの 命ともがな", poet: "儀同三司母", translation: "いつまでも忘れないという言葉が遠い未来まで続くのは難しい。幸せな今日を最後に、命が終わればいいのに。", tags: { love: 2, confusion: 1, sensitivity: 1 }, insight: "今ある幸せの尊さを、誰より強く感じられる", tone: "sensitivity" }),
+  createPoem({ id: "055", kamiNoKu: "滝の音は 絶えて久しく なりぬれど", shimoNoKu: "名こそ流れて なほ聞こえけれ", poet: "大納言公任", translation: "滝の音が聞こえなくなって長い時がたったが、その名声だけは今も世に流れ、聞こえ続けている。", tags: { effort: 2, confidence: 1, nostalgia: 1 }, insight: "目に見えるものが消えても、残る価値を信じられる", tone: "effort" }),
+  createPoem({ id: "056", kamiNoKu: "あらざらむ この世のほかの 思ひ出に", shimoNoKu: "今ひとたびの 逢ふこともがな", poet: "和泉式部", translation: "もうすぐ私はこの世からいなくなるだろう。あの世への思い出に、もう一度だけあなたに会いたい。", tags: { love: 2, passion: 1, loneliness: 1 }, insight: "限られた時間の中で、本当に大切な願いを見つめられる", tone: "love" }),
+  createPoem({ id: "058", kamiNoKu: "有馬山 猪名の笹原 風吹けば", shimoNoKu: "いでそよ人を 忘れやはする", poet: "大弐三位", translation: "有馬山の近く、猪名の笹原に風が吹けばそよそよ鳴る。そう、その言葉のように、どうしてあなたを忘れたりするでしょう。", tags: { love: 2, confidence: 2 }, insight: "大切な気持ちを、迷わずまっすぐ肯定できる", tone: "confidence" }),
+  createPoem({ id: "060", kamiNoKu: "大江山 いく野の道の 遠ければ", shimoNoKu: "まだふみもみず 天の橋立", poet: "小式部内侍", translation: "大江山を越え、生野を通る道は遠いので、天の橋立へ行ったことも、母からの手紙を見たこともありません。", tags: { confidence: 2, effort: 1, passion: 1 }, insight: "疑いを向けられても、知恵と実力で堂々と応えられる", tone: "confidence" }),
+  createPoem({ id: "061", kamiNoKu: "いにしへの 奈良の都の 八重桜", shimoNoKu: "けふ九重に にほひぬるかな", poet: "伊勢大輔", translation: "昔の奈良の都に咲いた八重桜が、今日は宮中でひときわ美しく咲き誇っている。", tags: { nostalgia: 1, sensitivity: 2, confidence: 1 }, insight: "受け継がれた美しさを、新しい場所で輝かせられる", tone: "sensitivity" }),
+  createPoem({ id: "062", kamiNoKu: "夜をこめて 鳥のそら音は はかるとも", shimoNoKu: "よに逢坂の 関はゆるさじ", poet: "清少納言", translation: "夜明け前に鶏の鳴きまねでだまそうとしても、函谷関ならともかく、この逢坂の関は決して開けません。", tags: { confidence: 2, calm: 1, passion: 1 }, insight: "機転を利かせながら、自分の境界線を守れる", tone: "confidence" }),
+  createPoem({ id: "063", kamiNoKu: "今はただ 思ひ絶えなむ とばかりを", shimoNoKu: "人づてならで 言ふよしもがな", poet: "左京大夫道雅", translation: "今はただ、あなたを思うことをあきらめると、その一言だけでも人づてではなく直接伝える方法があればいい。", tags: { love: 1, confusion: 2, calm: 1 }, insight: "終わりを迎えるときにも、誠実に言葉を届けたいと願う", tone: "confusion" }),
+  createPoem({ id: "064", kamiNoKu: "朝ぼらけ 宇治の川霧 たえだえに", shimoNoKu: "あらはれわたる 瀬々の網代木", poet: "権中納言定頼", translation: "夜明け方、宇治川の霧が途切れ途切れに晴れ、その間から川の瀬々に立つ網代木が現れてくる。", tags: { calm: 2, change: 1, sensitivity: 1 }, insight: "不透明な状況でも、少しずつ見える兆しを待てる", tone: "calm" }),
+  createPoem({ id: "065", kamiNoKu: "恨みわび ほさぬ袖だに あるものを", shimoNoKu: "恋に朽ちなむ 名こそ惜しけれ", poet: "相模", translation: "恨み嘆いて、涙で乾かない袖さえつらいのに、この恋のために評判まで失ってしまうのが惜しい。", tags: { love: 1, confusion: 2, confidence: 1 }, insight: "思いに揺れながらも、自分の尊厳を守ろうとする", tone: "confidence" }),
+  createPoem({ id: "067", kamiNoKu: "春の夜の 夢ばかりなる 手枕に", shimoNoKu: "かひなく立たむ 名こそ惜しけれ", poet: "周防内侍", translation: "短い春の夜の夢ほどの腕枕のために、つまらない浮き名が立つとしたら惜しいことです。", tags: { calm: 1, confidence: 2, confusion: 1 }, insight: "その場の流れに任せず、先のことまで冷静に考えられる", tone: "calm" }),
+  createPoem({ id: "068", kamiNoKu: "心にも あらでうき世に ながらへば", shimoNoKu: "恋しかるべき 夜半の月かな", poet: "三条院", translation: "望んでいるわけでもなく、このつらい世を生き長らえたなら、今夜のこの美しい月がきっと恋しく思い出されるだろう。", tags: { nostalgia: 2, sensitivity: 1, confusion: 1 }, insight: "今の苦しさの中にも、未来に残る美しさを見つけられる", tone: "nostalgia" }),
+  createPoem({ id: "069", kamiNoKu: "嵐吹く 三室の山の もみぢ葉は", shimoNoKu: "竜田の川の 錦なりけり", poet: "能因法師", translation: "嵐が吹き散らした三室山の紅葉は、竜田川へ流れ込み、水面を美しい錦に変えている。", tags: { change: 2, sensitivity: 2, passion: 1 }, insight: "激しい変化さえ、新しい美しさへ変えて見られる", tone: "change" }),
+  createPoem({ id: "072", kamiNoKu: "音にきく 高師の浜の あだ波は", shimoNoKu: "かけじや袖の ぬれもこそすれ", poet: "祐子内親王家紀伊", translation: "評判に聞く高師の浜のむなしい波にはかからないようにしましょう。移り気なあなたのために涙で袖がぬれると困りますから。", tags: { confidence: 2, love: 1, calm: 1 }, insight: "相手に流されず、自分の心を大切に守れる", tone: "confidence" }),
+  createPoem({ id: "073", kamiNoKu: "高砂の 尾の上の桜 咲きにけり", shimoNoKu: "外山の霞 立たずもあらなむ", poet: "権中納言匡房", translation: "遠くの高い山の峰に桜が咲いた。近くの山の霞よ、どうか立たずに、その桜を隠さないでおくれ。", tags: { sensitivity: 2, confidence: 1, calm: 1 }, insight: "遠くにある美しさも、まっすぐ見届けようとする", tone: "sensitivity" }),
+  createPoem({ id: "074", kamiNoKu: "憂かりける 人を初瀬の 山おろしよ", shimoNoKu: "はげしかれとは 祈らぬものを", poet: "源俊頼朝臣", translation: "冷たかったあの人が振り向くよう初瀬の観音に祈ったが、初瀬の山風よ、お前までこんなに激しく吹けとは祈っていない。", tags: { love: 1, confusion: 2, passion: 1 }, insight: "願いどおりにならない現実にも、ユーモアを失わず向き合える", tone: "confusion" }),
+  createPoem({ id: "075", kamiNoKu: "契りおきし させもが露を 命にて", shimoNoKu: "あはれ今年の 秋もいぬめり", poet: "藤原基俊", translation: "約束してくださった恵みの言葉を命の支えにしてきたのに、ああ、今年の秋もむなしく過ぎていくようだ。", tags: { effort: 2, confusion: 1, loneliness: 1 }, insight: "約束を信じ、長い時間を粘り強く待てる", tone: "effort" }),
+  createPoem({ id: "076", kamiNoKu: "わたの原 漕ぎ出でて見れば 久方の", shimoNoKu: "雲居にまがふ 沖つ白波", poet: "法性寺入道前関白太政大臣", translation: "広い海へ漕ぎ出して眺めると、沖の白波が遠い空の雲と見分けがつかないほど続いている。", tags: { confidence: 2, sensitivity: 1, change: 1 }, insight: "大きな世界へ踏み出し、広い視点で眺められる", tone: "confidence" }),
+  createPoem({ id: "078", kamiNoKu: "淡路島 かよふ千鳥の 鳴く声に", shimoNoKu: "幾夜寝覚めぬ 須磨の関守", poet: "源兼昌", translation: "淡路島から通ってくる千鳥の鳴き声に、須磨の関守は幾夜目を覚ましたことだろう。", tags: { loneliness: 2, nostalgia: 1, sensitivity: 1 }, insight: "夜の小さな音から、遠い場所や人へ思いを巡らせる", tone: "loneliness" }),
+  createPoem({ id: "079", kamiNoKu: "秋風に たなびく雲の 絶え間より", shimoNoKu: "もれ出づる月の 影のさやけさ", poet: "左京大夫顕輔", translation: "秋風に流れる雲の切れ間からこぼれ出る月の光は、なんと澄み切っていることだろう。", tags: { calm: 2, sensitivity: 2 }, insight: "曇りの切れ間に現れる光を、静かに受け取れる", tone: "calm" }),
+  createPoem({ id: "080", kamiNoKu: "長からむ 心も知らず 黒髪の", shimoNoKu: "乱れて今朝は ものをこそ思へ", poet: "待賢門院堀河", translation: "あなたの心がいつまでも変わらないかはわからない。別れた今朝は、黒髪のように心が乱れて物思いに沈んでいる。", tags: { love: 1, confusion: 2, sensitivity: 1 }, insight: "幸せなときにも、未来の不確かさを敏感に感じ取る", tone: "confusion" }),
+  createPoem({ id: "082", kamiNoKu: "思ひわび さても命は あるものを", shimoNoKu: "憂きにたへぬは 涙なりけり", poet: "道因法師", translation: "思い悩みながらも命はどうにか残っている。それなのに、つらさに耐えられずこぼれるのは涙なのだ。", tags: { confusion: 2, loneliness: 1, effort: 1 }, insight: "苦しさの中でも生き続ける、静かな粘り強さを持つ", tone: "effort" }),
+  createPoem({ id: "083", kamiNoKu: "世の中よ 道こそなけれ 思ひ入る", shimoNoKu: "山の奥にも 鹿ぞ鳴くなる", poet: "皇太后宮大夫俊成", translation: "この世にはつらさから逃れる道などない。思い詰めて入った山奥でさえ、鹿が悲しげに鳴いている。", tags: { confusion: 2, loneliness: 1, calm: 1 }, insight: "逃げずに、自分と世界の難しさを見つめられる", tone: "confusion" }),
+  createPoem({ id: "084", kamiNoKu: "ながらへば またこのごろや しのばれむ", shimoNoKu: "憂しと見し世ぞ 今は恋しき", poet: "藤原清輔朝臣", translation: "この先も生き長らえたなら、つらい今もいつか懐かしく思うのだろうか。かつてつらいと思った日々が、今は恋しいのだから。", tags: { nostalgia: 2, change: 1, calm: 1 }, insight: "今の出来事を、長い時間の流れの中で捉えられる", tone: "nostalgia" }),
+  createPoem({ id: "085", kamiNoKu: "夜もすがら もの思ふころは 明けやらで", shimoNoKu: "閨のひまさへ つれなかりけり", poet: "俊恵法師", translation: "一晩中思い悩んでいると、なかなか夜が明けず、寝室の戸の隙間さえ光を入れてくれない冷たいものに思える。", tags: { confusion: 2, loneliness: 2 }, insight: "答えの出ない夜を、深く考えながら過ごす", tone: "confusion" }),
+  createPoem({ id: "086", kamiNoKu: "嘆けとて 月やはものを 思はする", shimoNoKu: "かこち顔なる わが涙かな", poet: "西行法師", translation: "月が嘆けと言って私を物思いに沈ませるのだろうか。いや、月のせいにするように流れる私の涙なのだ。", tags: { sensitivity: 1, confusion: 2, calm: 1 }, insight: "感情の理由を外に求めながらも、自分の内側へ戻ってこられる", tone: "calm" }),
+  createPoem({ id: "087", kamiNoKu: "村雨の 露もまだひぬ まきの葉に", shimoNoKu: "霧立ちのぼる 秋の夕暮れ", poet: "寂蓮法師", translation: "通り雨の露もまだ乾かない槙の葉のあたりに、霧が立ちのぼる秋の夕暮れだ。", tags: { sensitivity: 2, calm: 2, change: 1 }, insight: "雨上がりの空気のような、微細な変化を味わえる", tone: "calm" }),
+  createPoem({ id: "088", kamiNoKu: "難波江の 蘆のかりねの ひとよゆゑ", shimoNoKu: "みをつくしてや 恋ひわたるべき", poet: "皇嘉門院別当", translation: "難波江の葦の刈り根の一節、その一夜だけの出会いのために、私はこの先ずっと身を尽くして恋い続けるのだろうか。", tags: { love: 2, passion: 1, confusion: 1 }, insight: "短い出会いにも、人生を動かすほどの意味を感じる", tone: "love" }),
+  createPoem({ id: "090", kamiNoKu: "見せばやな 雄島のあまの 袖だにも", shimoNoKu: "濡れにぞ濡れし 色は変はらじ", poet: "殷富門院大輔", translation: "あなたに見せたいものです。雄島の漁師の袖でさえ濡れ続けても色は変わらないのに、私の袖は血の涙で色まで変わってしまったと。", tags: { love: 1, passion: 2, loneliness: 1 }, insight: "言葉だけでは足りないほどの思いを、まっすぐ伝えたいと願う", tone: "passion" }),
+  createPoem({ id: "091", kamiNoKu: "きりぎりす 鳴くや霜夜の さむしろに", shimoNoKu: "衣かたしき ひとりかも寝む", poet: "後京極摂政前太政大臣", translation: "こおろぎが鳴く霜の降りる寒い夜、むしろの上に自分の衣だけを敷いて、一人で眠るのだろうか。", tags: { loneliness: 2, sensitivity: 1, calm: 1 }, insight: "静かな夜の寂しさを、無理に隠さず受け止められる", tone: "loneliness" }),
+  createPoem({ id: "092", kamiNoKu: "わが袖は 潮干に見えぬ 沖の石の", shimoNoKu: "人こそ知らね 乾く間もなし", poet: "二条院讃岐", translation: "私の袖は、潮が引いても見えない沖の石のよう。人は知らないけれど、涙で乾く間もない。", tags: { loneliness: 2, love: 1, calm: 1 }, insight: "人に見せない悲しみも、丁寧に抱えている", tone: "loneliness" }),
+  createPoem({ id: "093", kamiNoKu: "世の中は 常にもがもな 渚漕ぐ", shimoNoKu: "あまの小舟の 綱手かなしも", poet: "鎌倉右大臣", translation: "世の中がいつまでも変わらなければよいのに。渚を漕ぐ漁師の小舟が綱で引かれていく、あの素朴な景色が心にしみる。", tags: { nostalgia: 2, calm: 1, sensitivity: 1 }, insight: "変わらない日常の尊さを、深く味わえる", tone: "nostalgia" }),
+  createPoem({ id: "094", kamiNoKu: "み吉野の 山の秋風 さ夜更けて", shimoNoKu: "ふるさと寒く 衣打つなり", poet: "参議雅経", translation: "吉野の山に秋風が吹き、夜が更けて、古い都には冷え冷えと衣を打つ音が響いている。", tags: { nostalgia: 2, sensitivity: 1, loneliness: 1 }, insight: "場所に積もった時間を、音や空気から感じ取れる", tone: "nostalgia" }),
+  createPoem({ id: "095", kamiNoKu: "おほけなく うき世の民に おほふかな", shimoNoKu: "わが立つ杣に 墨染の袖", poet: "前大僧正慈円", translation: "身の程もわきまえず、このつらい世に生きる人々を、比叡山に住む私の墨染めの袖で包み守ろうとしている。", tags: { effort: 2, love: 1, confidence: 1 }, insight: "自分にできる形で、周りの人を支えようとする", tone: "effort" }),
+  createPoem({ id: "096", kamiNoKu: "花さそふ 嵐の庭の 雪ならで", shimoNoKu: "ふりゆくものは わが身なりけり", poet: "入道前太政大臣", translation: "嵐が桜を誘って散らす庭。降っているのは花の雪で、古びて年老いていくのは私自身なのだ。", tags: { change: 2, nostalgia: 1, sensitivity: 1 }, insight: "季節の移ろいに、自分自身の変化を重ねて見つめられる", tone: "change" }),
+  createPoem({ id: "097", kamiNoKu: "来ぬ人を まつほの浦の 夕なぎに", shimoNoKu: "焼くや藻塩の 身もこがれつつ", poet: "権中納言定家", translation: "来ない人を待ちながら、松帆の浦の夕凪に焼く藻塩のように、私の身も恋しさに焦がれ続けている。", tags: { love: 2, passion: 1, effort: 1 }, insight: "大切な人を待つ時間にも、思いを絶やさずいられる", tone: "love" }),
+  createPoem({ id: "098", kamiNoKu: "風そよぐ ならの小川の 夕暮れは", shimoNoKu: "みそぎぞ夏の しるしなりける", poet: "従二位家隆", translation: "風がそよぐ楢の葉と小川の夕暮れは、もう秋のように涼しい。ただ川で行う禊だけが、まだ夏であることを示している。", tags: { change: 2, calm: 1, sensitivity: 1 }, insight: "季節の境目にある、わずかな気配を見逃さない", tone: "change" }),
+  createPoem({ id: "099", kamiNoKu: "人もをし 人も恨めし あぢきなく", shimoNoKu: "世を思ふゆゑに もの思ふ身は", poet: "後鳥羽院", translation: "人が愛しくも恨めしくも思われる。思うようにならないこの世を考えるために、私は物思いに沈んでいる。", tags: { confusion: 2, love: 1, calm: 1 }, insight: "人や社会への相反する気持ちを、どちらもごまかさず見つめる", tone: "confusion" }),
+  createPoem({ id: "100", kamiNoKu: "百敷や 古き軒端の しのぶにも", shimoNoKu: "なほあまりある 昔なりけり", poet: "順徳院", translation: "宮中の古い軒端に生える忍草を見るにつけても、しのんでもしのびきれないほど、昔の栄えが懐かしく思われる。", tags: { nostalgia: 2, calm: 1, loneliness: 1 }, insight: "過ぎた時代や場所の記憶を、静かに受け継いでいける", tone: "nostalgia" }),
+];
+
+export const poems: Poem[] = [...featuredPoems, ...additionalPoems].sort((a, b) =>
+  a.id.localeCompare(b.id, "en", { numeric: true }),
+);
 
 export const defaultPoem = poems.find((poem) => poem.id === "017") ?? poems[0];

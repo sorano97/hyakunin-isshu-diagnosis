@@ -10,8 +10,11 @@ describe("diagnosis data", () => {
     questions.forEach((question) => expect(question.options).toHaveLength(4));
   });
 
-  it("contains 30 complete poems", () => {
-    expect(poems).toHaveLength(30);
+  it("contains all 100 complete poems in order", () => {
+    expect(poems).toHaveLength(100);
+    expect(poems.map((poem) => poem.id)).toEqual(
+      Array.from({ length: 100 }, (_, index) => String(index + 1).padStart(3, "0")),
+    );
     poems.forEach((poem) => {
       expect(poem.id).toMatch(/^\d{3}$/);
       expect(poem.kamiNoKu).toBeTruthy();
@@ -22,6 +25,7 @@ describe("diagnosis data", () => {
       expect(poem.comment).toBeTruthy();
       expect(poem.message).toBeTruthy();
       expect(poem.action).toBeTruthy();
+      expect(Object.values(poem.tags).every((score) => score > 0)).toBe(true);
     });
   });
 });

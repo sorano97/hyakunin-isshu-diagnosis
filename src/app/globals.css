@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "HGS明朝E", serif;
+  --font-sans: "Hiragino Sans", "Yu Gothic", "YuGothic", "Noto Sans JP", sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html { background: #f6f0e4; }
+
+body {
+  margin: 0;
+  color: #29251f;
+  background-color: #f6f0e4;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(185, 147, 74, 0.09), transparent 24%),
+    radial-gradient(circle at 88% 82%, rgba(164, 67, 50, 0.07), transparent 27%),
+    repeating-linear-gradient(105deg, rgba(82, 67, 46, 0.018) 0, rgba(82, 67, 46, 0.018) 1px, transparent 1px, transparent 7px);
+  min-width: 320px;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+@layer components {
+  .section-label {
+    @apply flex items-center gap-2 text-xs font-medium tracking-[0.18em] text-enji;
+  }
+  .section-label::before {
+    content: "";
+    @apply h-px w-5 bg-kin;
+  }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-enter { animation: rise-in 360ms ease-out both; }
+.result-enter { animation: rise-in 500ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
